@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>George Golder  — Software Developer</title>
+ 
+  <!-- ============================================================
+       FONTS
+       Urbanist   → display headings (bold, geometric)
+       Source Serif 4 → body text (elegant contrast to techy content)
+       JetBrains Mono → code snippets / skill tags
+  ============================================================ -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%232D1B3D'/><text x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='Urbanist,Arial,sans-serif' font-weight='900' font-size='26' fill='%23F2C96A'>GG</text></svg>" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ============================================================
+       CSS CUSTOM PROPERTIES (Design Tokens)
+       Change these to retheme the entire site instantly.
+    ============================================================ */
+    :root {
+      --bg:         #EDE8DF;   /* Warm sand — main background         */
+      --bg-alt:     #FAF7F2;   /* Slightly lighter sand — card BG     */
+      --bg-dark:    #2D1B3D;   /* Deep plum — hero + footer           */
+      --accent:     #E8573F;   /* Persimmon — primary CTA / highlight */
+      --accent-2:   #F2C96A;   /* Warm gold — secondary accent        */
+      --text:       #1A1216;   /* Near-black text on light BG         */
+      --text-muted: #6B6070;   /* Muted text — subtitles, captions    */
+      --text-light: #EDE8DF;   /* Light text on dark sections         */
+      --border:     rgba(45,27,61,0.12);
+      --shadow:     0 4px 24px rgba(45,27,61,0.10);
+      --radius:     12px;
+      --radius-sm:  6px;
+      --nav-h:      68px;      /* Height of sticky nav                */
+    }
+ 
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+ 
+    body {
+      font-family: 'Source Serif 4', Georgia, serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+ 
+    img { display: block; max-width: 100%; }
+    a   { color: inherit; text-decoration: none; }
+    ul  { list-style: none; }
+ 
+    /* ============================================================
+       UTILITY CLASSES
+    ============================================================ */
+    .container {
+      width: 100%;
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+ 
+    .section-label {
+      /* Small eyebrow text above section headings */
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+      display: block;
+    }
+ 
+    .section-heading {
+      font-family: 'Urbanist', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 900;
+      line-height: 1.1;
+      color: var(--text);
+      position: relative;
+    }
+ 
+    /* Signature element: giant translucent section number behind heading */
+    .section-heading::before {
+      content: attr(data-num);
+      position: absolute;
+      top: -0.35em;
+      left: -0.1em;
+      font-size: 5em;
+      font-weight: 900;
+      color: var(--bg-dark);
+      opacity: 0.05;
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+ 
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 26px;
+      border-radius: var(--radius-sm);
+      font-family: 'Urbanist', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+      border: none;
+    }
+    .btn:hover { transform: translateY(-2px); }
+ 
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 4px 18px rgba(232,87,63,0.35);
+    }
+    .btn-primary:hover { box-shadow: 0 8px 28px rgba(232,87,63,0.45); }
+ 
+    .btn-outline {
+      background: transparent;
+      color: var(--text-light);
+      border: 1.5px solid rgba(237,232,223,0.45);
+    }
+    .btn-outline:hover { background: rgba(237,232,223,0.1); }
+ 
+    /* ============================================================
+       NAVIGATION
+    ============================================================ */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--nav-h);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      background: rgba(237,232,223,0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s;
+    }
+ 
+    nav .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+ 
+    /* ── Logo / Name ── */
+    .nav-logo {
+      font-family: 'Urbanist', sans-serif;
+      font-weight: 900;
+      font-size: 1.2rem;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+    .nav-logo span { color: var(--accent); }
+ 
+    /* ── Desktop nav links ── */
+    .nav-links {
+      display: flex;
+      gap: 36px;
+    }
+    .nav-links a {
+      font-family: 'Urbanist', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+ 
+    /* ── Hamburger (mobile) ── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: transform 0.25s, opacity 0.25s;
+    }
+    .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+ 
+    /* ── Mobile drawer ── */
+    .mobile-drawer {
+      display: none;
+      position: fixed;
+      top: var(--nav-h);
+      left: 0; right: 0;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 24px 28px;
+      z-index: 99;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .mobile-drawer.open { display: flex; }
+    .mobile-drawer a {
+      font-family: 'Urbanist', sans-serif;
+      font-weight: 600;
+      font-size: 1.15rem;
+      color: var(--text);
+    }
+ 
+    /* ============================================================
+       HERO SECTION
+    ============================================================ */
+    #hero {
+      background: var(--bg-dark);
+      color: var(--text-light);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: var(--nav-h);
+      position: relative;
+      overflow: hidden;
+    }
+ 
+    /* Subtle diagonal grid pattern in background */
+    #hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(242,201,106,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(242,201,106,0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+    }
+ 
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      padding: 80px 0;
+    }
+ 
+    /* ── Status badge ── */
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(242,201,106,0.12);
+      border: 1px solid rgba(242,201,106,0.3);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--accent-2);
+      margin-bottom: 28px;
+    }
+    .hero-badge .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent-2);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+ 
+    /* ── Main headline ── */
+    .hero-title {
+      font-family: 'Urbanist', sans-serif;
+      font-weight: 900;
+      font-size: clamp(2.8rem, 8vw, 5.5rem);
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      color: var(--text-light);
+      margin-bottom: 24px;
+    }
+    .hero-title .line-accent { color: var(--accent-2); }
+ 
+    .hero-subtitle {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      font-weight: 300;
+      color: rgba(237,232,223,0.65);
+      max-width: 560px;
+      margin-bottom: 40px;
+      line-height: 1.8;
+    }
+ 
+    .hero-cta {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 60px;
+    }
+ 
+    /* ── Social links row ── */
+    .hero-socials {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    .hero-socials a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: rgba(237,232,223,0.5);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+    .hero-socials a:hover { color: var(--accent-2); }
+    .hero-socials .divider {
+      width: 1px;
+      height: 16px;
+      background: rgba(237,232,223,0.2);
+    }
+ 
+    /* ============================================================
+       SKILLS SECTION
+    ============================================================ */
+    #skills {
+      padding: 100px 0;
+    }
+ 
+    .skills-header {
+      margin-bottom: 60px;
+    }
+ 
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+    }
+ 
+    /* ── Skill category card ── */
+    .skill-card {
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .skill-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+    }
+ 
+    .skill-card-icon {
+      font-size: 1.6rem;
+      margin-bottom: 14px;
+    }
+ 
+    .skill-card h3 {
+      font-family: 'Urbanist', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+ 
+    /* ── Pill tags for individual skills ── */
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.73rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: 999px;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .tag:hover {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+ 
+    /* ============================================================
+       PROJECTS SECTION
+    ============================================================ */
+    #projects {
+      padding: 100px 0;
+      background: var(--bg-dark);
+      color: var(--text-light);
+    }
+ 
+    #projects .section-heading { color: var(--text-light); }
+    #projects .section-heading::before { color: var(--text-light); opacity: 0.06; }
+ 
+    .projects-header {
+      margin-bottom: 60px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+ 
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+ 
+    /* ── Project card ── */
+    .project-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(237,232,223,0.1);
+      border-radius: var(--radius);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .project-card:hover {
+      background: rgba(255,255,255,0.07);
+      transform: translateY(-3px);
+    }
+ 
+    .project-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+ 
+    .project-icon {
+      font-size: 1.8rem;
+    }
+ 
+    .project-links {
+      display: flex;
+      gap: 12px;
+    }
+    .project-links a {
+      color: rgba(237,232,223,0.5);
+      font-size: 1.1rem;
+      transition: color 0.2s;
+    }
+    .project-links a:hover { color: var(--accent-2); }
+ 
+    .project-card h3 {
+      font-family: 'Urbanist', sans-serif;
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--text-light);
+    }
+ 
+    .project-desc {
+      font-size: 0.95rem;
+      color: rgba(237,232,223,0.6);
+      line-height: 1.7;
+      flex: 1;
+    }
+ 
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .project-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 3px 10px;
+      border-radius: 999px;
+      background: rgba(242,201,106,0.12);
+      color: var(--accent-2);
+      border: 1px solid rgba(242,201,106,0.2);
+    }
+ 
+    /* ── Featured project (full-width) ── */
+    .project-card.featured {
+      grid-column: 1 / -1;
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 40px;
+    }
+    .project-card.featured .project-body { flex: 1; }
+ 
+    @media (max-width: 640px) {
+      .project-card.featured { flex-direction: column; }
+    }
+ 
+    /* ============================================================
+       RESUME SECTION
+    ============================================================ */
+    #resume {
+      padding: 100px 0;
+    }
+ 
+    .resume-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      margin-top: 60px;
+    }
+ 
+    .resume-col h3 {
+      font-family: 'Urbanist', sans-serif;
+      font-weight: 700;
+      font-size: 1.15rem;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text);
+    }
+ 
+    /* ── Timeline item ── */
+    .timeline { position: relative; }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      bottom: 8px;
+      width: 1px;
+      background: var(--border);
+    }
+ 
+    .timeline-item {
+      padding-left: 24px;
+      position: relative;
+      margin-bottom: 36px;
+    }
+    .timeline-item:last-child { margin-bottom: 0; }
+ 
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -4px;
+      top: 8px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--bg);
+    }
+ 
+    .timeline-date {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+ 
+    .timeline-title {
+      font-family: 'Urbanist', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text);
+      margin-bottom: 3px;
+    }
+ 
+    .timeline-sub {
+      font-size: 0.9rem;
+      color: var(--accent);
+      margin-bottom: 8px;
+      font-style: italic;
+    }
+ 
+    .timeline-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+ 
+    /* ── Resume download button ── */
+    .resume-download {
+      margin-top: 48px;
+      text-align: center;
+    }
+ 
+    @media (max-width: 768px) {
+      .resume-layout { grid-template-columns: 1fr; gap: 40px; }
+    }
+ 
+    /* ============================================================
+       CONTACT SECTION
+    ============================================================ */
+    #contact {
+      padding: 100px 0;
+      background: var(--bg-dark);
+      color: var(--text-light);
+      text-align: center;
+    }
+ 
+    #contact .section-heading { color: var(--text-light); }
+    #contact .section-heading::before { color: var(--text-light); opacity: 0.06; }
+ 
+    .contact-inner {
+      max-width: 580px;
+      margin: 0 auto;
+    }
+ 
+    .contact-text {
+      font-size: 1.1rem;
+      color: rgba(237,232,223,0.65);
+      margin: 20px 0 40px;
+      line-height: 1.8;
+    }
+ 
+    .contact-email-link {
+      font-family: 'Urbanist', sans-serif;
+      font-weight: 700;
+      font-size: clamp(1.1rem, 3vw, 1.5rem);
+      color: var(--accent-2);
+      display: inline-block;
+      margin-bottom: 48px;
+      transition: opacity 0.2s;
+    }
+    .contact-email-link:hover { opacity: 0.8; }
+ 
+    /* ── Social cards row ── */
+    .social-row {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    .social-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 20px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(237,232,223,0.12);
+      background: rgba(255,255,255,0.04);
+      font-family: 'Urbanist', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: rgba(237,232,223,0.75);
+      transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.2s;
+    }
+    .social-card:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: var(--accent-2);
+      color: var(--accent-2);
+      transform: translateY(-2px);
+    }
+    .social-card svg { flex-shrink: 0; }
+ 
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    footer {
+      background: #1A0E26;
+      padding: 28px 0;
+      text-align: center;
+    }
+    footer p {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: rgba(237,232,223,0.3);
+    }
+    footer span { color: var(--accent); }
+ 
+    /* ============================================================
+       ACCESSIBILITY — FOCUS STYLES
+    ============================================================ */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+ 
+    /* ============================================================
+       REDUCED MOTION
+    ============================================================ */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+ 
+    /* ============================================================
+       RESPONSIVE BREAKPOINTS
+    ============================================================ */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .hero-title { font-size: clamp(2.2rem, 10vw, 3.5rem); }
+      .hero-cta { gap: 10px; }
+      .projects-header { flex-direction: column; align-items: flex-start; }
+      .skills-grid { grid-template-columns: 1fr 1fr; }
+    }
+ 
+    @media (max-width: 480px) {
+      .skills-grid { grid-template-columns: 1fr; }
+      .social-row { gap: 10px; }
+      .social-card { font-size: 0.82rem; padding: 10px 14px; }
+    }
+  </style>
+</head>
+ 
+<body>
+ 
+  <!-- ============================================================
+       NAVIGATION
+  ============================================================ -->
+  <nav aria-label="Main navigation">
+    <div class="container">
+      <!-- ↓ Replace with your initials or short name -->
+      <a href="#hero" class="nav-logo">GG<span>.</span>portfolio</a>
+ 
+      <ul class="nav-links" role="list">
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#resume">Resume</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+ 
+      <button class="hamburger" id="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+ 
+  <!-- Mobile nav drawer -->
+  <div class="mobile-drawer" id="mobileDrawer" role="dialog" aria-label="Mobile navigation">
+    <a href="#skills"   onclick="closeDrawer()">Skills</a>
+    <a href="#projects" onclick="closeDrawer()">Projects</a>
+    <a href="#resume"   onclick="closeDrawer()">Resume</a>
+    <a href="#contact"  onclick="closeDrawer()">Contact</a>
+  </div>
+ 
+ 
+  <!-- ============================================================
+       HERO
+  ============================================================ -->
+  <section id="hero" aria-label="Introduction">
+    <div class="container">
+      <div class="hero-inner">
+ 
+        <!-- ↓ Change "Open to Work" to whatever fits your status -->
+        <div class="hero-badge">
+          <span class="dot"></span>
+          Open to opportunities
+        </div>
+ 
+        <!-- ↓ Replace with your name and role -->
+        <h1 class="hero-title">
+          Hi, I'm<br/>
+          <span class="line-accent">George Golder</span><br/>
+          I build for the web.
+        </h1>
+ 
+        <!-- ↓ Replace with your personal elevator pitch (2–3 sentences) -->
+        <p class="hero-subtitle">
+          Full-stack software developer focused on crafting clean, performant applications.
+          I care deeply about well-structured code, intuitive UX, and systems that scale.
+        </p>
+ 
+        <div class="hero-cta">
+          <a href="#projects" class="btn btn-primary">View my work</a>
+          <a href="#contact"  class="btn btn-outline">Get in touch</a>
+        </div>
+ 
+        <!-- ↓ Replace hrefs with your actual profile URLs -->
+        <div class="hero-socials">
+          <a href="https://github.com/golder78" target="_blank" rel="noopener noreferrer">
+            <!-- GitHub icon -->
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            GitHub
+          </a>
+          <div class="divider" aria-hidden="true"></div>
+          <a href="https://www.linkedin.com/in/george-golder-baraka-undefined-a25490420/?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base%3BUmSHqYaqQfixcPUzcBL52g%3D%3D" target="_blank" rel="noopener noreferrer">
+            <!-- LinkedIn icon -->
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            LinkedIn
+          </a>
+          <div class="divider" aria-hidden="true"></div>
+          <a href="mailto:georgegolderbaraka@gmail.com">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Email
+          </a>
+        </div>
+ 
+      </div>
+    </div>
+  </section>
+ 
+ 
+  <!-- ============================================================
+       SKILLS
+  ============================================================ -->
+  <section id="skills" aria-label="Skills and technologies">
+    <div class="container">
+      <div class="skills-header">
+        <span class="section-label">// what I work with</span>
+        <!-- data-num is the translucent background number — signature element -->
+        <h2 class="section-heading" data-num="01">Skills &amp; Technologies</h2>
+      </div>
+ 
+      <div class="skills-grid">
+ 
+        <!-- ↓ SKILL CARD 1 — Languages -->
+        <div class="skill-card">
+          <div class="skill-card-icon" aria-hidden="true">💻</div>
+          <h3>Languages</h3>
+          <div class="skill-tags">
+            <!-- ↓ Replace/add your languages -->
+            <span class="tag">JavaScript</span>
+            <span class="tag">TypeScript</span>
+            <span class="tag">Python</span>
+            <span class="tag">SQL</span>
+            <span class="tag">Bash</span>
+            <span class="tag">HTML/CSS</span>
+          </div>
+        </div>
+ 
+        <!-- ↓ SKILL CARD 2 — Frontend -->
+        <div class="skill-card">
+          <div class="skill-card-icon" aria-hidden="true">🎨</div>
+          <h3>Frontend</h3>
+          <div class="skill-tags">
+            <span class="tag">React</span>
+            <span class="tag">Next.js</span>
+            <span class="tag">Tailwind CSS</span>
+            <span class="tag">Vite</span>
+          </div>
+        </div>
+ 
+        <!-- ↓ SKILL CARD 3 — Backend -->
+        <div class="skill-card">
+          <div class="skill-card-icon" aria-hidden="true">⚙️</div>
+          <h3>Backend</h3>
+          <div class="skill-tags">
+            <span class="tag">Node.js</span>
+            <span class="tag">Express</span>
+            <span class="tag">REST APIs</span>
+            <span class="tag">JWT Auth</span>
+            <span class="tag">GraphQL</span>
+          </div>
+        </div>
+ 
+        <!-- ↓ SKILL CARD 4 — Databases -->
+        <div class="skill-card">
+          <div class="skill-card-icon" aria-hidden="true">🗄️</div>
+          <h3>Databases</h3>
+          <div class="skill-tags">
+            <span class="tag">PostgreSQL</span>
+            <span class="tag">MongoDB</span>
+            <span class="tag">MySQL</span>
+            <span class="tag">Prisma</span>
+          </div>
+        </div>
+ 
+        <!-- ↓ SKILL CARD 5 — DevOps / Infra -->
+        <div class="skill-card">
+          <div class="skill-card-icon" aria-hidden="true">🚀</div>
+          <h3>DevOps &amp; Infra</h3>
+          <div class="skill-tags">
+            <span class="tag">Linux</span>
+            <span class="tag">Docker</span>
+            <span class="tag">Git / GitHub</span>
+            <span class="tag">SSH</span>
+            <span class="tag">VPS</span>
+          </div>
+        </div>
+ 
+        <!-- ↓ SKILL CARD 6 — Tools -->
+        <div class="skill-card">
+          <div class="skill-card-icon" aria-hidden="true">🛠️</div>
+          <h3>Tools &amp; Practices</h3>
+          <div class="skill-tags">
+            <span class="tag">VS Code</span>
+            <span class="tag">Postman</span>
+            <span class="tag">Figma</span>
+          </div>
+        </div>
+ 
+      </div>
+    </div>
+  </section>
+ 
+ 
+  <!-- ============================================================
+       PROJECTS
+  ============================================================ -->
+  <section id="projects" aria-label="Projects">
+    <div class="container">
+      <div class="projects-header">
+        <div>
+          <span class="section-label" style="color: var(--accent-2);">// things I've built</span>
+          <h2 class="section-heading" data-num="02">Projects</h2>
+        </div>
+        <!-- ↓ Link to your GitHub profile -->
+        <a href="https://github.com/golder78" target="_blank" rel="noopener noreferrer"
+           style="font-family:'Urbanist',sans-serif; font-size:0.9rem; font-weight:600;
+                  color:rgba(237,232,223,0.5); display:flex; align-items:center; gap:6px;
+                  transition:color 0.2s;" onmouseover="this.style.color='#F2C96A'" onmouseout="this.style.color='rgba(237,232,223,0.5)'">
+          View all on GitHub →
+        </a>
+      </div>
+ 
+      <div class="projects-grid">
+ 
+        <!-- ══════════════════════════════════════════════════════
+             FEATURED PROJECT (full-width card)
+             ↓ Fill in your best/most significant project here
+        ═══════════════════════════════════════════════════════ -->
+        <article class="project-card featured">
+          <div class="project-body">
+            <div class="project-top" style="margin-bottom:16px;">
+              <span class="project-icon" aria-hidden="true"></span>
+              <div class="project-links">
+                <!-- ↓ Replace # with your repo link -->
+                <a href="#" target="_blank" rel="noopener noreferrer" aria-label="View code on GitHub">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                </a>
+                <!-- ↓ Replace # with live demo link, or remove if no demo -->
+                <a href="#" target="https://virtual-school-five.vercel.app/" rel="noopener noreferrer" aria-label="View live demo">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                </a>
+              </div>
+            </div>
+            <!-- ↓ Replace with your featured project details -->
+            <h3>VIRTUAL SCHOOL</h3>
+            <p class="project-desc">
+              VIRTUAL SCHOOL is a full-stack web application designed to facilitate online learning by providing a platform for schools, educators, and students. The system includes features such as school creation, student and educator management, attendance tracking, resource storage, online exams with plagiarism prevention, and class-based chats. Future improvements will include video conferencing and co-curricular activities.
+            </p>
+            <div class="project-tags" style="margin-top:16px;">
+              <span class="project-tag">Node.js</span>
+              <span class="project-tag">Express</span>
+              <span class="project-tag">React</span>
+              <span class="project-tag">PostgreSQL</span>
+              <span class="project-tag">Prisma</span>
+              <span class="project-tag">JWT</span>
+              <span class="project-tag">Axios</span>
+            </div>
+          </div>
+        </article>
+ 
+        <!-- ══════════════════════════════════════════════════════
+             PROJECT 2
+             ↓ Duplicate this <article> block for each project
+        ═══════════════════════════════════════════════════════ -->
+        <article class="project-card">
+          <div class="project-top">
+            <span class="project-icon" aria-hidden="true">🛒</span>
+            <div class="project-links">
+              <a href="#" target="_blank" rel="noopener noreferrer" aria-label="View code">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+              </a>
+              <a href="#" target="_blank" rel="noopener noreferrer" aria-label="View live demo">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </a>
+            </div>
+          </div>
+          <!-- ↓ Replace with your project details -->
+          <h3>Esco Project -API</h3>
+          <p class="project-desc">
+            RESTful API for an e-commerce platform with product management, cart system,
+            order processing, and user authentication. Includes input validation,
+            error handling middleware, and full CRUD operations.
+          </p>
+          <div class="project-tags">
+            <span class="project-tag">Node.js</span>
+            <span class="project-tag">Express</span>
+            <span class="project-tag">MongoDB</span>
+            <span class="project-tag">Mongoose</span>
+          </div>
+        </article>
+ 
+        <!-- PROJECT 3 -->
+        <article class="project-card">
+          <div class="project-top">
+            <span class="project-icon" aria-hidden="true">🔒</span>
+            <div class="project-links">
+              <a href="#" target="_blank" rel="noopener noreferrer" aria-label="View code">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+              </a>
+            </div>
+          </div>
+          <!-- ↓ Replace with your project details -->
+          <h3>VPN Infrastructure Setup</h3>
+          <p class="project-desc">
+            OpenVPN PKI infrastructure using Easy-RSA, with server hardening,
+            certificate authority setup, and client config generation.
+            Includes SSH hardening, UFW firewall rules, and monitoring.
+          </p>
+          <div class="project-tags">
+            <span class="project-tag">Linux</span>
+            <span class="project-tag">OpenVPN</span>
+            <span class="project-tag">Easy-RSA</span>
+            <span class="project-tag">UFW</span>
+            <span class="project-tag">SSH</span>
+          </div>
+        </article>
+ 
+        <!-- ↓ Add more project cards here by duplicating the <article> block above -->
+ 
+      </div>
+    </div>
+  </section>
+ 
+ 
+  <!-- ============================================================
+       RESUME
+  ============================================================ -->
+  <section id="resume" aria-label="Resume">
+    <div class="container">
+      <span class="section-label">// background</span>
+      <h2 class="section-heading" data-num="03">Experience &amp; Education</h2>
+ 
+      <div class="resume-layout">
+ 
+        <!-- ── EXPERIENCE COLUMN ── -->
+        <div class="resume-col">
+          <h3>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            Work Experience
+          </h3>
+ 
+          <div class="timeline">
+ 
+            <!-- ↓ Replace with your most recent role -->
+            <div class="timeline-item">
+              <div class="timeline-date">2026 — Present</div>
+              <div class="timeline-title">IT Support Specialist</div>
+              <div class="timeline-sub">Accounting Firm, Nairobi</div>
+              <p class="timeline-desc">
+                Managing Windows workstations, Synology NAS, QuickBooks Desktop multiuser
+                setup, domain administration, and network infrastructure. Sole IT support
+                for a professional services office.
+              </p>
+            </div>
+ 
+            <!-- ↓ Replace with previous role -->
+            <div class="timeline-item">
+              <div class="timeline-date">2024 — 2026</div>
+              <div class="timeline-title">Freelance Web Developer</div>
+              <div class="timeline-sub">Self-employed</div>
+              <p class="timeline-desc">
+                Built and deployed full-stack web applications for clients, including
+                e-commerce backends and business management tools using the MERN stack
+                and PostgreSQL.
+              </p>
+            </div>
+ 
+            <!-- ↓ Add more roles as needed -->
+ <div class="timeline-item">
+              <div class="timeline-date">2024 — 2026</div>
+              <div class="timeline-title">Armature Boxer</div>
+              <div class="timeline-sub">Boxer , Nairobi</div>
+              <p class="timeline-desc">
+                Participated in many local boxing competitions  winning a couple of them but also got losses which was a learning experience for me that helped me to  get a chance to participate in the national novice championships in early 2026 .
+              </p>
+            </div>
+          </div>
+        </div>
+ 
+        <!-- ── EDUCATION COLUMN ── -->
+        <div class="resume-col">
+          <h3>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            Education
+          </h3>
+ 
+          <div class="timeline">
+ 
+            <!-- ↓ Replace with your degree/certification -->
+            <div class="timeline-item">
+              <div class="timeline-date">2024 — 2025</div>
+              <div class="timeline-title">Software Engineering</div>
+              <div class="timeline-sub">MORINGA SCHOOOL</div>
+              <p class="timeline-desc">
+                Coursework in data structures, algorithms, databases, networking,
+                and software engineering. Final project: ESCO PROJECT.
+              </p>
+            </div>
+ 
+            <!-- ↓ Certifications / extra education -->
+            <div class="timeline-item">
+              <div class="timeline-date">2026</div>
+              <div class="timeline-title">TryHackMe — Jr Penetration Tester</div>
+              <div class="timeline-sub">Online Certification</div>
+              <p class="timeline-desc">
+                Completed practical labs covering web application security, IDOR, OWASP
+                Top 10, network recon, and remote code execution.
+              </p>
+            </div>
+ 
+            <div class="timeline-item">
+              <div class="timeline-date">2024 — 2026</div>
+              <div class="timeline-title">Linux Server Administration</div>
+              <div class="timeline-sub">Self-directed study</div>
+              <p class="timeline-desc">
+                In-depth study of SSH hardening, firewall configuration, backup strategies,
+                monitoring with Prometheus/Grafana, and VPN deployment.
+              </p>
+            </div>
+ 
+          </div>
+        </div>
+ 
+      </div>
+ 
+      <!-- ↓ Point this href to your actual resume PDF file -->
+       <div class="resume-download">
+        <button onclick="window.print()" class="btn btn-primary" aria-label="Download resume as PDF">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download Resume (PDF)
+        </button>
+        <p style="margin-top:12px; font-size:0.82rem; color:var(--text-muted); font-family:'JetBrains Mono',monospace;">
+          Opens print dialog → choose "Save as PDF"
+        </p>
+      </div>
+ 
+    </div>
+  </section>
+ 
+ 
+ 
+  <!-- ============================================================
+       CONTACT
+  ============================================================ -->
+  <section id="contact" aria-label="Contact">
+    <div class="container">
+      <div class="contact-inner">
+        <span class="section-label" style="color:var(--accent-2);">// get in touch</span>
+        <h2 class="section-heading" data-num="04">Let's Work Together</h2>
+ 
+        <p class="contact-text">
+          Whether you have a project in mind, a role to fill, or just want to connect —
+          my inbox is always open.
+        </p>
+ 
+        <!-- ↓ Replace with your actual email address -->
+    <a href="mailto:MY EMAIL" class="contact-email-link">georgegolderbaraka@gmail.com</a>
+ 
+        <!-- ↓ Replace hrefs with your actual profile URLs -->
+        <div class="social-row">
+          <a href="https://github.com/golder79" target="_blank" rel="noopener noreferrer" class="social-card">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/in/george-golder-baraka-undefined-a25490420/?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base%3BUmSHqYaqQfixcPUzcBL52g%3D%3D" target="_blank" rel="noopener noreferrer" class="social-card">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            LinkedIn
+          </a>
+          <a href="https://twitter.com/yourusername" target="_blank" rel="noopener noreferrer" class="social-card">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
+            Twitter / X
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+ 
+ 
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer>
+    <div class="container">
+      <!-- ↓ Replace "Your Name" with your actual name -->
+      <p>Designed &amp; built by <span>George Golder Baraka</span> · <span id="year"></span></p>
+    </div>
+  </footer>
+ 
+ 
+  <!-- ============================================================
+       JAVASCRIPT
+       Minimal — hamburger toggle + dynamic year in footer.
+  ============================================================ -->
+  <script>
+    // ── Auto-update copyright year ──
+    document.getElementById('year').textContent = new Date().getFullYear();
+ 
+    // ── Hamburger / mobile drawer toggle ──
+    const hamburger   = document.getElementById('hamburger');
+    const mobileDrawer = document.getElementById('mobileDrawer');
+ 
+    function closeDrawer() {
+      hamburger.classList.remove('open');
+      mobileDrawer.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', 'false');
+    }
+ 
+    hamburger.addEventListener('click', () => {
+      const isOpen = mobileDrawer.classList.toggle('open');
+      hamburger.classList.toggle('open', isOpen);
+      hamburger.setAttribute('aria-expanded', String(isOpen));
+    });
+ 
+    // Close drawer when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!hamburger.contains(e.target) && !mobileDrawer.contains(e.target)) {
+        closeDrawer();
+      }
+    });
+ 
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeDrawer();
+    });
+  </script>
+ 
+</body>
+</html>
+ 
